@@ -243,6 +243,9 @@ export class TokenPriceController extends BaseDiscordActionController<APIInterac
       const prefix = option.value.toLowerCase();
       let choices = this.tokens
         .filter(c => {
+          if (c.id === 'collab-land') {
+            return false;
+          }
           return (
             c.id.toLowerCase().startsWith(prefix) ||
             c.symbol.toLowerCase().startsWith(prefix) ||
@@ -250,7 +253,7 @@ export class TokenPriceController extends BaseDiscordActionController<APIInterac
           );
         })
         .map(c => ({name: `${c.symbol}: ${c.name}`, value: c.id}))
-        .slice(0, 10);
+        .slice(0, 20);
 
       if (
         'collab.land'.startsWith(prefix) ||
