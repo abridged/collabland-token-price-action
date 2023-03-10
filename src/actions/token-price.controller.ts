@@ -167,7 +167,6 @@ export class TokenPriceController extends BaseDiscordActionController<APIInterac
             )
             .setThumbnail(quote.image.thumb)
             .setFooter({text: new Date().toISOString()})
-            .setURL(`https://www.coingecko.com/en/coins/${quote.id}`)
             .toJSON(),
         ],
         components: [
@@ -178,6 +177,10 @@ export class TokenPriceController extends BaseDiscordActionController<APIInterac
                 .setStyle(ButtonStyle.Primary)
                 // Set the custom id to start with `token-price:`
                 .setCustomId(`token-price:refresh-button:${id}`),
+              new ButtonBuilder()
+                .setLabel(`Chart`)
+                .setStyle(ButtonStyle.Link)
+                .setURL(`https://www.coingecko.com/en/coins/${quote.id}`),
             )
             .toJSON(),
         ],
