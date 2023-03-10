@@ -142,6 +142,7 @@ export class TokenPriceController extends BaseDiscordActionController<APIInterac
     id: string,
   ) {
     const quote = await getTokenQuote(id);
+    const ticker = quote.tickers[0];
 
     const appId = request.application_id;
     const response: APIInteractionResponse = {
@@ -150,7 +151,7 @@ export class TokenPriceController extends BaseDiscordActionController<APIInterac
         // content: `Token price for ${quote.symbol}`,
         embeds: [
           new EmbedBuilder()
-            .setTitle(`Token quote for ${quote.symbol}`)
+            .setTitle(`$${quote.symbol.toUpperCase()} (${quote.name})`)
             .setColor('#f5c248')
             .setAuthor({
               name: 'Collab.Land',
@@ -158,15 +159,17 @@ export class TokenPriceController extends BaseDiscordActionController<APIInterac
               iconURL: `https://cdn.discordapp.com/app-icons/${appId}/8a814f663844a69d22344dc8f4983de6.png`,
             })
             .setDescription(
-              `${quote.asset_platform_id} ${quote.contract_address}
+              `${quote.asset_platform_id} [${quote.contract_address}](${quote.links.blockchain_site[0]})
+  Market cap rank: ${quote.market_cap_rank}            
               
-  Price: $${quote.tickers[0].converted_last.usd}
-  Volume: $${quote.tickers[0].converted_volume.usd}
-  Timestamp: ${quote.tickers[0].timestamp}
-  Last traded at: ${quote.tickers[0].last_traded_at}`,
+  Price: $${ticker.converted_last.usd}
+  Volume: $${ticker.converted_volume.usd}
+  Timestamp: ${ticker.timestamp}
+  Last traded at: ${ticker.last_traded_at}
+  `,
             )
-            .setThumbnail(quote.image.thumb)
-            .setFooter({text: new Date().toISOString()})
+            .setThumbnail(quote.image.small)
+            .setFooter({text: 'Refreshed at: ' + new Date().toISOString()})
             .toJSON(),
         ],
         components: [
@@ -247,12 +250,13 @@ export class TokenPriceController extends BaseDiscordActionController<APIInterac
             return false;
           }
           return (
-            c.id.toLowerCase().startsWith(prefix) ||
-            c.symbol.toLowerCase().startsWith(prefix) ||
-            c.name.toLowerCase().startsWith(prefix)
+            // c.id.toLowerCase().startsWith(prefix) ||
+            c.symbol.toLowerCase().startsWith(prefix)
+            // c.name.toLowerCase().startsWith(prefix)
           );
         })
         .map(c => ({name: `${c.symbol}: ${c.name}`, value: c.id}))
+        .sort((a, b) => a.name.localeCompare(b.name))
         .slice(0, 20);
 
       if (
