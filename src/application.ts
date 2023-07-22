@@ -6,17 +6,18 @@
 import {getEnvVar, getEnvVarAsNumber} from '@collabland/common';
 import {ApplicationConfig} from '@loopback/core';
 import {RestApplication} from '@loopback/rest';
-import path from 'path';
-import {HelloActionComponent} from './component.js';
+import {fileURLToPath} from 'url';
+import {TokenPriceComponent} from './component.js';
 
 /**
  * A demo application to expose REST APIs for Hello action
  */
-export class HelloActionApplication extends RestApplication {
+export class TokenPriceApplication extends RestApplication {
   constructor(config?: ApplicationConfig) {
-    super(HelloActionApplication.resolveConfig(config));
-    this.component(HelloActionComponent);
-    this.static('/', path.join(__dirname, '../public'));
+    super(TokenPriceApplication.resolveConfig(config));
+    this.component(TokenPriceComponent);
+    const dir = fileURLToPath(new URL('../public', import.meta.url));
+    this.static('/', dir);
   }
 
   private static resolveConfig(config?: ApplicationConfig): ApplicationConfig {

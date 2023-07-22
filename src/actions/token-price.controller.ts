@@ -306,7 +306,7 @@ export class TokenPriceController extends BaseDiscordActionController<APIInterac
         // Handle message components such as buttons
         type: InteractionType.MessageComponent,
         // Use a namespace to catch all buttons with custom id starting with `token-price:`
-        ids: ['token-price:refresh-button:*'],
+        ids: ['token-price:*'],
       },
     ];
   }

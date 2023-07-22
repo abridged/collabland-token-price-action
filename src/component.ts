@@ -9,6 +9,6 @@ import {TokenPriceController} from './actions/token-price.controller.js';
 /**
  * Register all services including command handlers, job runners and services
  */
-export class HelloActionComponent implements Component {
+export class TokenPriceComponent implements Component {
   controllers = [TokenPriceController];
 }

@@ -4,9 +4,9 @@
 // License text available at https://opensource.org/licenses/MIT
 
 import {generateEcdsaKeyPair, generateEd25519KeyPair} from '@collabland/action';
-import {getEnvVar, setEnvVar} from '@collabland/common';
+import {getEnvVar, isMain, setEnvVar} from '@collabland/common';
 import {ApplicationConfig} from '@loopback/core';
-import {HelloActionApplication} from './application.js';
+import {TokenPriceApplication} from './application.js';
 
 export async function main(config: ApplicationConfig = {}, publicKey?: string) {
   publicKey =
@@ -43,19 +43,16 @@ export async function main(config: ApplicationConfig = {}, publicKey?: string) {
     // Set the public key
     setEnvVar('COLLABLAND_ACTION_PUBLIC_KEY', publicKey, true);
   }
-  const app = new HelloActionApplication(config);
+  const app = new TokenPriceApplication(config);
   await app.start();
 
   const url = app.restServer.url;
   if (config.rest == null) {
-    console.log(`Hello action is running at ${url}`);
+    console.log(`Token price action is running at ${url}`);
   }
   return {app, signingKey};
 }
 
-if (require.main === module) {
-  main().catch(err => {
-    console.error('Fail to start the HelloWorld action: %O', err);
-    process.exit(1);
-  });
+if (isMain(import.meta.url)) {
+  await main();
 }
